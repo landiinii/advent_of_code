@@ -11,7 +11,7 @@ func main() {
 	input := readInput("input.txt")
 
 	part1(input)
-	// part2(input)
+	part2(input)
 }
 
 func part1(input []string) {
@@ -39,6 +39,37 @@ func part1(input []string) {
 
 func part2(input []string) {
 	fmt.Println("Part 2")
+
+	running_sum := 0
+
+	for _, id_range := range input {
+		start, end := get_id_range(id_range)
+		for i := start; i <= end; i++ {
+			invalid_id_str := false
+			str_num := fmt.Sprintf("%d", i)
+			for j := 1; j <= len(str_num)/2; j++ {
+				if len(str_num)%j != 0 {
+					continue
+				}
+				split_works := true
+				first_part := str_num[:j]
+				for k := j; k < len(str_num); k += j {
+					if str_num[k:k+j] != first_part {
+						split_works = false
+						break
+					}
+				}
+				if split_works {
+					invalid_id_str = true
+					break
+				}
+			}
+			if invalid_id_str {
+				running_sum += i
+			}
+		}
+	}
+	fmt.Println(running_sum)
 }
 
 func get_id_range(id_range string) (int, int) {
