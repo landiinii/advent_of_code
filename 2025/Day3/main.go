@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math"
 	"os"
 	"strconv"
 	"strings"
@@ -11,7 +12,7 @@ func main() {
 	input := readInput("input.txt")
 
 	part1(input)
-	// part2(input)
+	part2(input)
 }
 
 func part1(input []string) {
@@ -39,6 +40,24 @@ func part1(input []string) {
 
 func part2(input []string) {
 	fmt.Println("Part 2")
+	running_sum := 0
+	for _, line := range input {
+		slots := parse_bank(line)
+		starting_slot := 0
+		for i := 11; i >= 0; i-- {
+			next_num := slots[starting_slot]
+			next_cutoff := starting_slot + 1
+			for j := starting_slot; j < len(slots)-i; j++ {
+				if slots[j] > next_num {
+					next_num = slots[j]
+					next_cutoff = j + 1
+				}
+			}
+			starting_slot = next_cutoff
+			running_sum += next_num * int(math.Pow(10, float64(i)))
+		}
+	}
+	fmt.Println(running_sum)
 }
 
 func parse_bank(bank_str string) []int {
